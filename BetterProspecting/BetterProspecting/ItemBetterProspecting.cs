@@ -252,8 +252,6 @@ namespace BetterProspecting
             foreach (KeyValuePair<string, int> item in list)
             {
                 string l = Lang.GetL(serverPlayer.LanguageCode, item.Key);
-                // Original code.
-                // serverPlayer.SendMessage(GlobalConstants.InfoLogChatGroup, Lang.GetL(serverPlayer.LanguageCode, $"{l.ToUpper()}: {item.Value} block(s) away"), EnumChatType.Notification);
                 string blocksAwayMessage = "";
                 if (item.Value >= 100)
                     blocksAwayMessage = "Very Cold";

@@ -1,19 +1,20 @@
 {
   "type": "code",
-  "modid": "BetterProspecting",
-  "name": "BetterProspecting",
+  "modid": "BetterProspectingRebalanced",
+  "name": "BetterProspectingRebalanced",
   "authors": [
     "NathanNgo",
     "Shacklebottom",
     "iturtleman",
     "Voragain",
-    "PurplePi"
+    "PurplePi",
+    "BlackLightEve"
   ],
   "contributors": [
     "Gnomp"
   ],
-  "description": "A less tedious form of prospecting.",
-  "version": "1.7.0",
+  "description": "A *slightly* less tedious form of prospecting.",
+  "version": "1.0.0",
   "dependencies": {
     "game": "*"
   }

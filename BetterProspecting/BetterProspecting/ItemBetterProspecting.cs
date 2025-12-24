@@ -189,6 +189,7 @@ namespace BetterProspecting
             serverPlayer.SendMessage(GlobalConstants.InfoLogChatGroup, Lang.GetL(serverPlayer.LanguageCode, $"Area sample taken for a length of {xzlength}:"), EnumChatType.Notification);
 
             Dictionary<string, int> firstOreDistance = new Dictionary<string, int>();
+            Dictionary<string, string> firstOreDirection = new Dictionary<string, string>();
 
             BlockPos blockPos = blockSel.Position.Copy();
             api.World.BlockAccessor.WalkBlocks(blockPos.AddCopy(xzlength, ylength, xzlength), blockPos.AddCopy(-xzlength, -ylength, -xzlength), delegate (Block nblock, int x, int y, int z)
@@ -199,7 +200,31 @@ namespace BetterProspecting
                     int distance = (int)blockSel.Position.DistanceTo(new BlockPos(x, y, z));
                     if (!firstOreDistance.ContainsKey(key) || distance < firstOreDistance[key])
                     {
+                        // Store distance from ore
                         firstOreDistance[key] = distance;
+                        // Store cardinal direction from ore
+                        string xDir = "";
+                        string zDir = "";
+                        string yDir = "Level";
+                        string cardinalDirection = "(N/A)";
+
+                        if (x < blockSel.Position.X)
+                            xDir = "West ";
+                        else if (x > blockSel.Position.X)
+                            xDir = "East ";
+
+                        if (z < blockSel.Position.Z)
+                            zDir = "North ";
+                        else if (z > blockSel.Position.Z)
+                            zDir = "South ";
+
+                        if (y < blockSel.Position.Y)
+                            yDir = "Below";
+                        else if (y > blockSel.Position.Y)
+                            yDir = "Above";
+
+                        cardinalDirection = "(" + $"{zDir}{xDir}{yDir}" + ")";
+                        firstOreDirection[key] = cardinalDirection;
                     }
                 }
                 if (mode == ProspectingTargetType.Rock && nblock.Variant.ContainsKey("rock"))
@@ -227,7 +252,22 @@ namespace BetterProspecting
             foreach (KeyValuePair<string, int> item in list)
             {
                 string l = Lang.GetL(serverPlayer.LanguageCode, item.Key);
-                serverPlayer.SendMessage(GlobalConstants.InfoLogChatGroup, Lang.GetL(serverPlayer.LanguageCode, $"{l.ToUpper()}: {item.Value} block(s) away"), EnumChatType.Notification);
+                // Original code.
+                // serverPlayer.SendMessage(GlobalConstants.InfoLogChatGroup, Lang.GetL(serverPlayer.LanguageCode, $"{l.ToUpper()}: {item.Value} block(s) away"), EnumChatType.Notification);
+                string blocksAwayMessage = "";
+                if (item.Value >= 100)
+                    blocksAwayMessage = "Very Cold";
+                else if (item.Value >= 80)
+                    blocksAwayMessage = "Cold";
+                else if (item.Value >= 60)
+                    blocksAwayMessage = "Lukewarm";
+                else if (item.Value >= 40)
+                    blocksAwayMessage = "Warm";
+                else if (item.Value >= 20)
+                    blocksAwayMessage = "Hot";
+                else
+                    blocksAwayMessage = "Very Hot";
+                serverPlayer.SendMessage(GlobalConstants.InfoLogChatGroup, Lang.GetL(serverPlayer.LanguageCode, $"{l.ToUpper()}: {blocksAwayMessage} {firstOreDirection[item.Key]}"), EnumChatType.Notification);
             }
         }
 
